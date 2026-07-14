@@ -1,0 +1,17 @@
+# Migrated from ~/ansible/roles/postgres/templates
+# PostgreSQL Declaration File
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  labels:
+    app: postgres
+spec:
+  selector:
+    app: postgres
+  ports:
+    - name: tcp-postgres
+      protocol: TCP
+      port: 5432
+      targetPort: 5432
+  type: LoadBalancer
