@@ -1,0 +1,13 @@
+# Migrated from ~/ansible/roles/postgres/templates
+# PVC Definition File for PosrgreSQL Storage
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pg-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: nfs-storage
+  resources:
+    requests:
+      storage: 20Gi
