@@ -4,7 +4,7 @@ metadata:
   name: dev-workload-apps
   namespace: argocd
 spec:
-  project: default
+  project: gitops
   source:
     repoURL: 'git@github.com:ddolkwak/observability-platform-cluster-desired-state.git'
     targetRevision: HEAD
