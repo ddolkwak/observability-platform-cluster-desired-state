@@ -1,0 +1,9 @@
+# Kustomization File for Spring Boot App
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: spring-app
+
+resources:
+  - deployment.yaml
+  - service.yaml
