@@ -31,7 +31,7 @@ spec:
       # 2. Main App Container
       containers:
         - name: spring-app
-          image: ghcr.io/ddolkwak/observability-spring-boot-app-development/spring-app:latest
+          image: ghcr.io/ddolkwak/observability-spring-boot-app-development/spring-app:v1.0.0
           ports:
             - containerPort: 8080
           env:
