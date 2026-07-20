@@ -13,6 +13,22 @@ spec:
       labels:
         app: spring-app
     spec:
+      # 1. Init Container (Flyway)
+      initContainers:
+        - name: flyway-migration
+          image: flyway/flyway:10
+          command:
+            - flyway
+            - -url=jdbc:postgresql://postgres-service.postgres.svc.cluster.local:5432/database
+            - -user=postgres
+            - -password=postgres
+            - -connectRetries=10
+            - migrate
+          volumeMounts:
+            - name: flyway-sql
+              mountPath: /flyway/sql
+      
+      # 2. Main App Container
       containers:
         - name: spring-app
           image: ghcr.io/ddolkwak/observability-spring-boot-app-development/spring-app:latest
@@ -58,3 +74,8 @@ spec:
             initialDelaySeconds: 60
             periodSeconds: 10
             timeoutSeconds: 5
+      # 3. Flyway SQL Mount
+      volumes:
+        - name: flyway-sql
+          configMap:
+            name: flyway-sql
