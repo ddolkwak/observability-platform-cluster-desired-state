@@ -1,0 +1,23 @@
+# Spring Boot Application Definition File
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: spring-app
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1" # Enable Spring Boot After DB Enabled
+spec:
+  project: gitops
+  source:
+    repoURL: 'git@github.com:ddolkwak/observability-platform-cluster-desired-state.git'
+    targetRevision: HEAD
+    path: manifests/workloads/spring-app/base
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: spring-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
