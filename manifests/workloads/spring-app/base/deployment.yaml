@@ -5,6 +5,12 @@ metadata:
   name: spring-app
 spec:
   replicas: 2
+  # Rolling Update Strategy Settings
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: spring-app
@@ -16,14 +22,13 @@ spec:
       # Pod Affinity Settings
       affinity:
         podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app
-                operator: In
-                values:
-                - spring-app
-            topologyKey: "kubernetes.io/hostname"
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app: spring-app
+              topologyKey: "kubernetes.io/hostname"
       containers:
         - name: spring-app
           image: ghcr.io/ddolkwak/observability-spring-boot-app-development/spring-app:v1.0.2
@@ -42,10 +47,10 @@ spec:
           # Resource Limitations
           resources:
             requests:
-              memory: "256Mi"
+              memory: "300Mi"
               cpu: "100m"
             limits:
-              memory: "512Mi"
+              memory: "700Mi"
               cpu: "500m"
 
           # Health Check (Actuator)
