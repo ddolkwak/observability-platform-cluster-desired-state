@@ -22,13 +22,14 @@ spec:
       # Pod Affinity Settings
       affinity:
         podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchLabels:
-                  app: spring-app
-              topologyKey: "kubernetes.io/hostname"
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - spring-app
+            topologyKey: "kubernetes.io/hostname"
       containers:
         - name: spring-app
           image: ghcr.io/ddolkwak/observability-spring-boot-app-development/spring-app:v1.0.2
