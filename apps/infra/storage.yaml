@@ -13,6 +13,8 @@ spec:
     targetRevision: 4.0.18
     helm:
       valuesObject:
+        # PriorityClass Settings
+        priorityClassName: "infra-critical"
         nfs:
           server: 192.168.56.133
           path: /srv/nfs_shared/kubernetes

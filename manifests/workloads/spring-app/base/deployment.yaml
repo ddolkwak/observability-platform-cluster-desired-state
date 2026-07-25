@@ -19,6 +19,8 @@ spec:
       labels:
         app: spring-app
     spec:
+      # PriorityClass Settings
+      priorityClassName: "app-priority"
       # Pod Affinity Settings
       affinity:
         podAntiAffinity:
