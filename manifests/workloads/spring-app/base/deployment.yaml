@@ -19,6 +19,8 @@ spec:
       labels:
         app: spring-app
     spec:
+      # PriorityClass Settings
+      priorityClassName: "app-priority"
       # Pod Affinity Settings
       affinity:
         podAntiAffinity:
@@ -32,7 +34,7 @@ spec:
             topologyKey: "kubernetes.io/hostname"
       containers:
         - name: spring-app
-          image: ghcr.io/ddolkwak/observability-spring-boot-app-development/spring-app:v1.0.2
+          image: ghcr.io/ddolkwak/observability-spring-boot-app-development/spring-app:v1.0.3
           ports:
             - containerPort: 8080
           env:

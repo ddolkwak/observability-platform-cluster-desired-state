@@ -14,6 +14,8 @@ spec:
       labels:
         app: postgres
     spec:
+      # PriorityClass Settings
+      priorityClassName: "app-priority"
       containers:
         - name: postgres
           image: postgres:15
