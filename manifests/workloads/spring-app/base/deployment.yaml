@@ -44,15 +44,17 @@ spec:
               value: "postgres"
             - name: OTEL_SERVICE_NAME
               value: "spring-app"
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms128m -Xmx256m"
 
           # Resource Limitations
           resources:
             requests:
-              memory: "300Mi"
+              memory: "350Mi"
               cpu: "100m"
             limits:
-              memory: "700Mi"
-              cpu: "500m"
+              memory: "500Mi"
+              cpu: "400m"
 
           # Health Check (Actuator)
           startupProbe:
