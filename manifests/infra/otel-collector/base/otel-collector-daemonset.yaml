@@ -1,0 +1,65 @@
+# OpenTelemetry Metrics Collector DaemonSet File
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: otel-collector
+  labels:
+    app: otel-collector
+spec:
+  selector:
+    matchLabels:
+      app: otel-collector
+  template:
+    metadata:
+      labels:
+        app: otel-collector
+    spec:
+      priorityClassName: "infra-critical"
+      containers:
+        - name: otel-collector
+          image: otel/opentelemetry-collector-contrib:0.95.0
+          command:
+            - "/otelcol-contrib"
+            - "--config=/conf/config.yaml"
+          ports:
+            - name: otlp-grpc
+              containerPort: 4317
+              hostPort: 4317
+              protocol: TCP
+            - name: otlp-http
+              containerPort: 4318
+              hostPort: 4318
+              protocol: TCP
+          env:
+            - name: GRAFANA_INSTANCE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-auth-secret
+                  key: instance-id
+            - name: GRAFANA_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-auth-secret
+                  key: api-key
+            - name: GRAFANA_OTLP_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-auth-secret
+                  key: endpoint
+          resources:
+            requests:
+              cpu: 50m
+              memory: 100Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          volumeMounts:
+            - name: otel-config-volume
+              mountPath: /conf
+      volumes:
+        - name: otel-config-volume
+          configMap:
+            name: otel-collector-config
+            items:
+              - key: config.yaml
+                path: config.yaml

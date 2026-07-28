@@ -1,0 +1,21 @@
+# OpenTelemetry Application Declaration File
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: otel-collector
+  namespace: argocd
+spec:
+  project: gitops
+  source:
+    repoURL: 'https://github.com/ddolkwak/observability-k8s-gitops.git'
+    targetRevision: HEAD
+    path: manifests/infra/otel-collector/base
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: otel-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
