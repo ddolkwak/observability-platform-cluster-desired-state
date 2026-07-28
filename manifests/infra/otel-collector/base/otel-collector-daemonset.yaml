@@ -29,14 +29,23 @@ spec:
             - name: otlp-http
               containerPort: 4318
               hostPort: 4318
-              protocol: TCP 
+              protocol: TCP
           env:
             - name: GRAFANA_INSTANCE_ID
-              value: ${GRAFANA_INSTANCE_ID}
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-auth-secret
+                  key: instance-id
             - name: GRAFANA_API_KEY
-              value: ${GRAFANA_API_KEY}
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-auth-secret
+                  key: api-key
             - name: GRAFANA_OTLP_ENDPOINT
-              value: ${GRAFANA_OTLP_ENDPOINT}
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-auth-secret
+                  key: endpoint
           resources:
             requests:
               cpu: 50m
