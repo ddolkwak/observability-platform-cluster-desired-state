@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - otel-collector-config.yaml
   - otel-collector-daemonset.yaml
+  - otel-collector-service.yaml
