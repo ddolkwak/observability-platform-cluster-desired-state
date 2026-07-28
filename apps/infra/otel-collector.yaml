@@ -7,7 +7,7 @@ metadata:
 spec:
   project: gitops
   source:
-    repoURL: 'https://github.com/ddolkwak/observability-k8s-gitops.git'
+    repoURL: 'git@github.com:ddolkwak/observability-platform-cluster-desired-state.git'
     targetRevision: HEAD
     path: manifests/infra/otel-collector/base
   destination:
