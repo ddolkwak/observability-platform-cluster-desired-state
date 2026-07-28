@@ -46,10 +46,6 @@ spec:
               value: "postgres"
             - name: OTEL_SERVICE_NAME
               value: "spring-app"
-            - name: OTEL_COLLECTOR_HOST
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.hostIP
             - name: JAVA_TOOL_OPTIONS
               value: "-Xms128m -Xmx256m"
 
