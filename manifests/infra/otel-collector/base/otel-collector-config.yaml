@@ -36,8 +36,6 @@ data:
         endpoint: "${env:GRAFANA_OTLP_ENDPOINT}"
         auth:
           authenticator: basicauth/grafana
-      debug:
-        verbosity: detailed
 
     service:
       extensions: [basicauth/grafana]
@@ -45,4 +43,4 @@ data:
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, batch]
-          exporters: [otlphttp/grafana, debug]
+          exporters: [otlphttp/grafana]
