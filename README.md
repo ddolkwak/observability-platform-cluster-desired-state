@@ -1,7 +1,7 @@
 # Next-Generation Cloud-Native Infrastructure & Observability Platform Based on eBPF (Cilium) and OpenTelemetry
 
 ### Overview
-_This is an Infrastructure as Code (IaC) Repository that automatically provisions a Kubernetes-based cluster in a local development environment(with Resource Constraints of 16GB RAM & 250GB disk) using Vagrant and Ansible._
+_This repository manages the Kubernetes cluster configuration and application deployments using GitOps principles. All infrastructure components, networking, and observability stacks are defined declaratively and continuously synced via ArgoCD._
 
 **Related Repositories** :
 * **Cluster Infra Provisioning** : _[observability-platform-with-cloud-native.git](https://github.com/ddolkwak/observability-platform-with-cloud-native)_
@@ -19,8 +19,11 @@ _By converging_
 * Kernel-level Networking (eBPF),
 
 _the goal is to build cloud-native architecture and an observability platform within the resource constraints of local host environment._
+
 _1) Move beyond traditional monitoring architectures and resource-intensive sidecar proxy approaches by establishing a global-standard OpenTelemetry (OTel) telemetry pipeline._
+
 _2) Utilize the Cilium CNI with eBPF capabilities to provide kube-proxy-free observability and control over microservice network topologies and metrics._
+
 _3) Applying Strict Resource Optimization, delve into cluster components, connection principles, etc.(Both Kernel-level & application-level)._
 
 ---
@@ -37,7 +40,7 @@ _3) Applying Strict Resource Optimization, delve into cluster components, connec
 ![Diagram4](./architecture-diagram/application-and-network-routing.svg)
 
 ### Observability & Monitoring
-![Diagram5](./architecture-diagram/observability-and-monitoring.svg)
+![Diagram5](./architecture-diagram/observability-and-monitoring(revised).svg)
 
 ---
 ### Core Technical Stack (Overall)
