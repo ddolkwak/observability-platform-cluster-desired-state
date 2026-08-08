@@ -20,12 +20,29 @@ data:
             endpoint: 0.0.0.0:4317
           http:
             endpoint: 0.0.0.0:4318
+      filelog:
+        include: [/var/log/pods/*/*/*.log]
+        exclude: [/var/log/pods/*/otel-collector/*.log]
+        start_at: end
+        include_file_path: true
+        include_file_name: false
+        operators:
+        - type: container
 
     processors:
       memory_limiter:
         check_interval: 1s
-        limit_mib: 150
-        spike_limit_mib: 30
+        limit_mib: 200
+        spike_limit_mib: 50
+
+      transform:
+        error_mode: ignore
+        log_statements:
+          - context: log
+            statements:
+              - set(cache, ExtractPatterns(body, "traceId=(?P<t>[a-f0-9]+),spanId=(?P<s>[a-f0-9]+)"))
+              - set(trace_id.string, cache["t"])
+              - set(span_id.string, cache["s"])
       
       batch:
         timeout: 10s
@@ -43,4 +60,12 @@ data:
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, batch]
+          exporters: [otlphttp/grafana]
+        traces:
+          receivers: [otlp]
+          processors: [memory_limiter, batch]
+          exporters: [otlphttp/grafana]
+        logs:
+          receivers: [otlp, filelog]
+          processors: [memory_limiter, transform, batch]
           exporters: [otlphttp/grafana]

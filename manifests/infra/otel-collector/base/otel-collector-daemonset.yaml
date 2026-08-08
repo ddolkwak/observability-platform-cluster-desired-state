@@ -46,6 +46,12 @@ spec:
                 secretKeyRef:
                   name: grafana-auth-secret
                   key: endpoint
+            - name: OTEL_BSP_MAX_EXPORT_BATCH_SIZE
+              value: "256"
+            - name: OTEL_BSP_SCHEDULE_DELAY
+              value: "2000"
+            - name: OTEL_BSP_MAX_QUEUE_SIZE
+              value: "1024"
           resources:
             requests:
               cpu: 50m
