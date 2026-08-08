@@ -61,3 +61,11 @@ data:
           receivers: [otlp]
           processors: [memory_limiter, batch]
           exporters: [otlphttp/grafana]
+        traces:
+          receivers: [otlp]
+          processors: [memory_limiter, batch]
+          exporters: [otlphttp/grafana]
+        logs:
+          receivers: [otlp, filelog]
+          processors: [memory_limiter, transform, batch]
+          exporters: [otlphttp/grafana]
