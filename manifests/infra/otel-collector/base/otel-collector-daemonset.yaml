@@ -17,7 +17,7 @@ spec:
       priorityClassName: "infra-critical"
       containers:
         - name: otel-collector
-          image: otel/opentelemetry-collector-contrib:0.95.0
+          image: otel/opentelemetry-collector-contrib:0.158.0
           command:
             - "/otelcol-contrib"
             - "--config=/conf/config.yaml"
