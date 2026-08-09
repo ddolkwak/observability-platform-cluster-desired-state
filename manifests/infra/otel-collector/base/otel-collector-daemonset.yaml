@@ -18,6 +18,9 @@ spec:
       containers:
         - name: otel-collector
           image: otel/opentelemetry-collector-contrib:0.158.0
+          securityContext:
+            runAsUser: 0
+            runAsNonRoot: false
           command:
             - "/otelcol-contrib"
             - "--config=/conf/config.yaml"
