@@ -15,6 +15,7 @@ spec:
         app: otel-collector
     spec:
       priorityClassName: "infra-critical"
+      serviceAccountName: otel-collector-sa
       containers:
         - name: otel-collector
           image: otel/opentelemetry-collector-contrib:0.158.0
