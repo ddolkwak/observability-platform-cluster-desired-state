@@ -20,6 +20,7 @@ data:
             endpoint: 0.0.0.0:4317
           http:
             endpoint: 0.0.0.0:4318
+
       filelog:
         include: [/var/log/pods/*/*/*.log]
         exclude: [/var/log/pods/*/otel-collector/*.log]
@@ -34,6 +35,25 @@ data:
         check_interval: 1s
         limit_mib: 200
         spike_limit_mib: 50
+
+      k8sattributes:
+        auth_type: "serviceAccount"
+        filter:
+          node_from_env_var: KUBE_NODE_NAME
+        pod_association:
+          - sources:
+            - from: connection
+        extract:
+          metadata:
+            - k8s.pod.name
+            - k8s.pod.uid
+            - k8s.namespace.name
+            - k8s.node.name
+            - k8s.node.ip
+            - k8s.deployment.name
+            - k8s.replicaset.name
+            - k8s.daemonset.name
+            - k8s.statefulset.name
 
       transform:
         error_mode: ignore
@@ -59,13 +79,13 @@ data:
       pipelines:
         metrics:
           receivers: [otlp]
-          processors: [memory_limiter, batch]
+          processors: [memory_limiter, k8sattributes, batch]
           exporters: [otlphttp/grafana]
         traces:
           receivers: [otlp]
-          processors: [memory_limiter, batch]
+          processors: [memory_limiter, k8sattributes, batch]
           exporters: [otlphttp/grafana]
         logs:
           receivers: [otlp, filelog]
-          processors: [memory_limiter, transform, batch]
+          processors: [memory_limiter, k8sattributes, transform, batch]
           exporters: [otlphttp/grafana]
