@@ -7,3 +7,4 @@ resources:
   - otel-collector-config.yaml
   - otel-collector-daemonset.yaml
   - otel-collector-service.yaml
+  - cilium-local-redirect-policy.yaml
