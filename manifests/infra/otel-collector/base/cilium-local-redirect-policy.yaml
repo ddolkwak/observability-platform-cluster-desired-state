@@ -1,0 +1,22 @@
+# Cilium Local Redirect Policy for OpenTelemetry Collector
+apiVersion: cilium.io/v2
+kind: CiliumLocalRedirectPolicy
+metadata:
+  name: otel-collector-local-redirect-policy
+  namespace: otel-system
+spec:
+  redirectFrontend:
+    serviceMatcher:
+      serviceName: otel-collector-service
+      namespace: otel-system
+  redirectBackend:
+    localEndpointSelector:
+      matchLabels:
+        app: otel-collector
+    toPorts:
+      - name: otlp-grpc
+        port: 4317
+        protocol: TCP
+      - name: otlp-http
+        port: 4318
+        protocol: TCP
