@@ -49,7 +49,6 @@ data:
             - k8s.pod.uid
             - k8s.namespace.name
             - k8s.node.name
-            - k8s.node.ip
             - k8s.deployment.name
             - k8s.replicaset.name
             - k8s.daemonset.name
