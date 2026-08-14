@@ -70,7 +70,7 @@ data:
     exporters:
       debug:
         verbosity: detailed
-        
+
       otlphttp/grafana:
         endpoint: "${env:GRAFANA_OTLP_ENDPOINT}"
         auth:
@@ -82,7 +82,7 @@ data:
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, k8sattributes, batch]
-          exporters: [otlphttp/grafana]
+          exporters: [debug]
         traces:
           receivers: [otlp]
           processors: [memory_limiter, k8sattributes, batch]
