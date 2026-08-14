@@ -68,6 +68,9 @@ data:
         send_batch_size: 1024
 
     exporters:
+      debug:
+        verbosity: detailed
+        
       otlphttp/grafana:
         endpoint: "${env:GRAFANA_OTLP_ENDPOINT}"
         auth:
