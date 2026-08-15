@@ -48,6 +48,14 @@ spec:
               value: "spring-app"
             - name: JAVA_TOOL_OPTIONS
               value: "-Xms128m -Xmx256m"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
 
           # Resource Limitations
           resources:
