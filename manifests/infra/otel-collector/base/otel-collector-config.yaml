@@ -91,6 +91,6 @@ data:
           processors: [memory_limiter, k8sattributes, batch]
           exporters: [otlphttp/grafana]
         logs:
-          receivers: [otlp, filelog]
+          receivers: [filelog]
           processors: [memory_limiter, k8sattributes, transform, batch]
           exporters: [otlphttp/grafana]
