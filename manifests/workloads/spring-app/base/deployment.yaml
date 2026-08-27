@@ -34,7 +34,7 @@ spec:
             topologyKey: "kubernetes.io/hostname"
       containers:
         - name: spring-app
-          image: ghcr.io/ddolkwak/observability-spring-boot-app-development/spring-app:v2.0.0
+          image: ghcr.io/ddolkwak/observability-spring-boot-app-development/spring-app:v1.2.1
           ports:
             - containerPort: 8080
           env:
