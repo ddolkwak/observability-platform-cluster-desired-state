@@ -67,7 +67,7 @@ data:
                   replacement: '$$1:9100'
 
                 - target_label: cluster
-                  replacement: observability-lab
+                  replacement: clusters
 
                 - target_label: environment
                   replacement: dev
