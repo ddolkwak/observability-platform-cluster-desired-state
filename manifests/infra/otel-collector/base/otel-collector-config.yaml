@@ -51,7 +51,7 @@ data:
                   target_label: instance
                   replacement: '$$1:9100'
                 - target_label: cluster
-                  replacement: clusters
+                  replacement: observability-lab
                 - target_label: environment
                   replacement: dev
 
