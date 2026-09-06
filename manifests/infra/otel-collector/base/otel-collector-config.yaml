@@ -20,6 +20,40 @@ data:
             endpoint: 0.0.0.0:4317
           http:
             endpoint: 0.0.0.0:4318
+            prometheus/node-exporter:
+        config:
+          scrape_configs:
+            - job_name: node-exporter
+              scrape_interval: 30s
+              scrape_timeout: 10s
+              kubernetes_sd_configs:
+                - role: pod
+                  namespaces:
+                    names: [otel-system]
+                  selectors:
+                    - role: pod
+                      label: app=node-exporter
+                      field: spec.nodeName=${env:KUBE_NODE_NAME}
+              relabel_configs:
+                - source_labels:
+                    [__meta_kubernetes_pod_phase]
+                  regex: Running
+                  action: keep
+                - source_labels:
+                    [__meta_kubernetes_pod_container_port_name]
+                  regex: metrics
+                  action: keep
+                - source_labels:
+                    [__meta_kubernetes_pod_node_name]
+                  target_label: node
+                - source_labels:
+                    [__meta_kubernetes_pod_node_name]
+                  target_label: instance
+                  replacement: '$$1:9100'
+                - target_label: cluster
+                  replacement: clusters
+                - target_label: environment
+                  replacement: dev
 
       filelog:
         include: [/var/log/pods/*/*/*.log]
