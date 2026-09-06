@@ -15,7 +15,6 @@ spec:
     spec:
       nodeSelector:
         kubernetes.io/os: linux
-        kubernetes.io/hostname: k8s-worker-1
       hostNetwork: true
       hostPID: true
       dnsPolicy: ClusterFirstWithHostNet
