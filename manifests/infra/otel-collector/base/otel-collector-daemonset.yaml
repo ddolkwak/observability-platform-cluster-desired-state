@@ -16,6 +16,13 @@ spec:
     spec:
       priorityClassName: "infra-critical"
       serviceAccountName: otel-collector-sa
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+          effect: NoSchedule
       containers:
         - name: otel-collector
           image: otel/opentelemetry-collector-contrib:0.158.0
