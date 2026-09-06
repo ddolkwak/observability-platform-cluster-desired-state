@@ -120,6 +120,10 @@ data:
           receivers: [otlp]
           processors: [memory_limiter, k8sattributes, batch]
           exporters: [otlphttp/grafana]
+        metrics/node-exporter:
+          receivers: [prometheus/node-exporter]
+          processors: [memory_limiter, batch]
+          exporters: [otlphttp/grafana]
         traces:
           receivers: [otlp]
           processors: [memory_limiter, k8sattributes, batch]
