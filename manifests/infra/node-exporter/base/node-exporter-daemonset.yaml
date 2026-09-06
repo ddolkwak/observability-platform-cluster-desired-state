@@ -19,6 +19,13 @@ spec:
       hostPID: true
       dnsPolicy: ClusterFirstWithHostNet
       automountServiceAccountToken: false
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+          effect: NoSchedule
       containers:
         - name: node-exporter
           image: quay.io/prometheus/node-exporter:v1.9.1
