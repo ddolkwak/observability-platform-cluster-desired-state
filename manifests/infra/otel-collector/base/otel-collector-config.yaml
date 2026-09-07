@@ -74,6 +74,69 @@ data:
                 - target_label: job
                   replacement: node-exporter
 
+      prometheus/kubelet:
+        config:
+          scrape_configs:
+            - job_name: kubelet
+              scheme: https
+              metrics_path: /metrics
+              scrape_interval: 30s
+              scrape_timeout: 10s
+              authorization:
+                type: Bearer
+                credentials_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+              tls_config:
+                ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+                insecure_skip_verify: false
+              kubernetes_sd_configs:
+                - role: node
+                  selectors:
+                    - role: node
+                      field: metadata.name=${env:KUBE_NODE_NAME}
+              relabel_configs:
+                - source_labels: [__meta_kubernetes_node_name]
+                  target_label: node
+                - target_label: cluster
+                  replacement: observability-lab
+                - target_label: environment
+                  replacement: dev
+                - target_label: scrape_job
+                  replacement: kubelet
+                - target_label: collector_node
+                  replacement: '${env:KUBE_NODE_NAME}'
+
+            - job_name: cadvisor
+              scheme: https
+              metrics_path: /metrics/cadvisor
+              scrape_interval: 30s
+              scrape_timeout: 10s
+              authorization:
+                type: Bearer
+                credentials_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+              tls_config:
+                ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+                insecure_skip_verify: false
+              kubernetes_sd_configs:
+                - role: node
+                  selectors:
+                    - role: node
+                      field: metadata.name=${env:KUBE_NODE_NAME}
+              relabel_configs:
+                - source_labels: [__meta_kubernetes_node_name]
+                  target_label: node
+                - target_label: cluster
+                  replacement: observability-lab
+                - target_label: environment
+                  replacement: dev
+                - target_label: scrape_job
+                  replacement: cadvisor
+                - target_label: collector_node
+                  replacement: '${env:KUBE_NODE_NAME}'
+              metric_relabel_configs:
+                - source_labels: [__name__]
+                  regex: 'container_cpu_usage_seconds_total|container_memory_working_set_bytes|container_memory_usage_bytes|container_cpu_cfs_periods_total|container_cpu_cfs_throttled_periods_total|container_cpu_cfs_throttled_seconds_total'
+                  action: keep
+
       filelog:
         include: [/var/log/pods/*/*/*.log]
         exclude: [/var/log/pods/*/otel-collector/*.log]
@@ -141,6 +204,10 @@ data:
           exporters: [otlphttp/grafana]
         metrics/node-exporter:
           receivers: [prometheus/node-exporter]
+          processors: [memory_limiter, batch]
+          exporters: [otlphttp/grafana]
+        metrics/kubelet:
+          receivers: [prometheus/kubelet]
           processors: [memory_limiter, batch]
           exporters: [otlphttp/grafana]
         traces:
