@@ -69,7 +69,7 @@ data:
                 - target_label: __tmp_scraper_node
                   replacement: '${env:KUBE_NODE_NAME}'
                 - source_labels: [__tmp_scraper_node]
-                  regex: k8s-worker-1
+                  regex: k8s-worker-2
                   action: keep
                 - target_label: job
                   replacement: node-exporter
