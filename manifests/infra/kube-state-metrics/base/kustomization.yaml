@@ -1,0 +1,10 @@
+# Kustomization File
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: otel-system
+
+resources:
+  - kube-state-metrics-rbac.yaml
+  - kube-state-metrics-deployment.yaml
+  - kube-state-metrics-service.yaml
