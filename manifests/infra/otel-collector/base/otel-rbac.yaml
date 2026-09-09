@@ -18,9 +18,6 @@ rules:
   - apiGroups: ["apps"]
     resources: ["replicasets", "deployments", "daemonsets", "statefulsets"]
     verbs: ["get", "watch", "list"]
-  - apiGroups: [""]
-    resources: ["nodes/metrics"]
-    verbs: ["get"]
 ---
 # ClusterRoleBinding File for OpenTelemetry Collector
 apiVersion: rbac.authorization.k8s.io/v1
