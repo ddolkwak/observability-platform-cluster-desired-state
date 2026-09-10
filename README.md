@@ -1,9 +1,10 @@
 # Next-Generation Cloud-Native Infrastructure & Observability Platform Based on eBPF (Cilium) and OpenTelemetry
 
 ### Overview
-_This repository manages the Kubernetes desired state for a local cloud-native infrastructure and observability platform built with **Cilium/eBPF, ArgoCD, and OpenTelemetry**. ArgoCD Core reconciles infrastructure services and Spring Boot/PostgreSQL workloads through an App-of-Apps structure, using Kustomize manifests and Helm charts._
 
-_The platform runs on a single VirtualBox host with 4 VMs sharing a **9 GiB aggregate VM memory budget**. VM provisioning and cluster bootstrap are managed in a separate Vagrant/Ansible repository, while application source code, builds, and telemetry instrumentation belong to the Spring Boot repository. This repository manages resources deployed after bootstrap, including the OpenTelemetry Collector pipelines that export metrics, logs, and traces to Grafana Cloud._
+This repository manages the Kubernetes desired state for a local cloud-native infrastructure and observability platform built with **Cilium/eBPF, ArgoCD, and OpenTelemetry**. ArgoCD Core reconciles infrastructure services and Spring Boot/PostgreSQL workloads through an App-of-Apps structure, using Kustomize manifests and Helm charts.
+
+The platform runs on a single VirtualBox host with 4 VMs sharing a **9 GiB aggregate VM memory budget**. VM provisioning and cluster bootstrap are managed in a separate Vagrant/Ansible repository, while application source code, builds, and telemetry instrumentation belong to the Spring Boot repository. This repository manages resources deployed after bootstrap, including the OpenTelemetry Collector pipelines that export metrics, logs, and traces to Grafana Cloud.
 
 **Related Repositories** :
 * **Cluster Infra Provisioning** : _[observability-platform-with-cloud-native.git](https://github.com/ddolkwak/observability-platform-with-cloud-native)_
@@ -22,6 +23,7 @@ Build a reproducible Kubernetes lab that combines **Infrastructure as Code, GitO
 2. **Integrate application metrics, logs, and traces.** Use framework-based instrumentation and an OpenTelemetry Collector DaemonSet to collect telemetry, enrich it with Kubernetes metadata, and support log-to-trace correlation in Grafana Cloud.
 3. **Validate kube-proxy-free networking.** Configure Cilium native routing and eBPF Service routing, and align telemetry delivery with the Collector's node-local metadata scope through Cilium Local Redirect Policy.
 4. **Make resource constraints part of the design.** Evaluate component memory settings, replica counts, VM allocations, and external telemetry backends; investigate failures across the application, Collector, network, and kernel layers and verify the resulting changes.
+
 ---
 ### System Architecture
 ![Diagram1](./architecture-diagram/system-architecture.svg)
@@ -108,6 +110,7 @@ gitops/
 │   ├── infra/
 │   │   ├── priority-class.yaml
 │   │   ├── storage.yaml
+│   │   ├── node-exporter.yaml
 │   │   └── otel-collector.yaml
 │   └── workloads/
 │       ├── postgres.yaml
@@ -118,6 +121,10 @@ gitops/
     │   │   └── base/
     │   │       ├── kustomization.yaml
     │   │       └── priority-classes.yaml
+    │   ├── node-exporter/
+    │   │   └── base/
+    │   │       ├── kustomization.yaml
+    │   │       └── node-exporter-daemonset.yaml
     │   └── otel-collector/
     │       ├── base/
     │       │   ├── kustomization.yaml
