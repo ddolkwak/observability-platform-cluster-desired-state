@@ -107,6 +107,10 @@ data:
                   replacement: kubelet
                 - target_label: collector_node
                   replacement: '${env:KUBE_NODE_NAME}'
+              metric_relabel_configs:
+                - source_labels: [__name__]
+                  regex: 'kubelet_running_(pods|containers)|kubelet_runtime_operations_total|kubelet_runtime_operations_errors_total|kubelet_run_podsandbox_errors_total|kubelet_image_pull_duration_seconds_(sum|count)'
+                  action: keep
 
             - job_name: cadvisor
               scheme: https
