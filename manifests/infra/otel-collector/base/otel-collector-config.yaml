@@ -337,11 +337,33 @@ data:
           authenticator: basicauth/grafana
 
     service:
+      telemetry:
+        resource:
+          service.name: otel-collector
+          service.instance.id: '${env:KUBE_NODE_NAME}:8888'
+        metrics:
+          level: normal
+          readers:
+            - pull:
+                exporter:
+                  prometheus:
+                    host: '127.0.0.1'
+                    port: 8888
+                    without_scope_info: true
+                    without_type_suffix: true
+                    without_units: true
+                    with_resource_constant_labels:
+                      included: []
+
       extensions: [basicauth/grafana]
       pipelines:
         metrics:
           receivers: [otlp]
           processors: [memory_limiter, k8sattributes, batch]
+          exporters: [otlphttp/grafana]
+        metrics/self:
+          receivers: [prometheus/self]
+          processors: [memory_limiter, batch]
           exporters: [otlphttp/grafana]
         metrics/node-exporter:
           receivers: [prometheus/node-exporter]
