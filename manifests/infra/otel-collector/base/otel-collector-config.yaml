@@ -215,8 +215,8 @@ data:
                   replacement: dev
                 - target_label: scrape_job
                   replacement: kube-state-metrics
-                - target_label: collector_node
-                  replacement: '${env:KUBE_NODE_NAME}'
+                - target_label: instance
+                  replacement: kube-state-metrics:8080
               metric_relabel_configs:
                 - source_labels: [__name__]
                   regex: "kube_pod_(info|owner|deletion_timestamp)|\
