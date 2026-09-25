@@ -54,6 +54,18 @@ data:
                   replacement: observability-lab
                 - target_label: environment
                   replacement: dev
+              metric_relabel_configs:
+                - source_labels: [__name__]
+                  regex: "node_cpu_seconds_total|\
+                    node_load(1|5|15)|\
+                    node_memory_(MemTotal|MemAvailable|MemFree|Buffers|Cached|SReclaimable|Shmem|SwapTotal|SwapFree)_bytes|\
+                    node_filesystem_(avail_bytes|free_bytes|size_bytes|files|files_free|readonly|device_error)|\
+                    node_disk_(read_bytes_total|written_bytes_total|reads_completed_total|writes_completed_total|read_time_seconds_total|write_time_seconds_total|io_time_seconds_total|io_time_weighted_seconds_total|io_now)|\
+                    node_network_(receive|transmit)_(bytes|packets|errs|drop)_total|\
+                    node_network_(up|speed_bytes)|\
+                    node_boot_time_seconds|node_uname_info|\
+                    node_scrape_collector_success|node_nfs(d)?_.*"
+                  action: keep
                   
             - job_name: node-exporter-nfs
               scrape_interval: 30s
@@ -73,6 +85,18 @@ data:
                   action: keep
                 - target_label: job
                   replacement: node-exporter
+              metric_relabel_configs:
+                - source_labels: [__name__]
+                  regex: "node_cpu_seconds_total|\
+                    node_load(1|5|15)|\
+                    node_memory_(MemTotal|MemAvailable|MemFree|Buffers|Cached|SReclaimable|Shmem|SwapTotal|SwapFree)_bytes|\
+                    node_filesystem_(avail_bytes|free_bytes|size_bytes|files|files_free|readonly|device_error)|\
+                    node_disk_(read_bytes_total|written_bytes_total|reads_completed_total|writes_completed_total|read_time_seconds_total|write_time_seconds_total|io_time_seconds_total|io_time_weighted_seconds_total|io_now)|\
+                    node_network_(receive|transmit)_(bytes|packets|errs|drop)_total|\
+                    node_network_(up|speed_bytes)|\
+                    node_boot_time_seconds|node_uname_info|\
+                    node_scrape_collector_success|node_nfs(d)?_.*"
+                  action: keep
 
       prometheus/kubelet:
         config:
@@ -109,7 +133,13 @@ data:
                   replacement: '${env:KUBE_NODE_NAME}'
               metric_relabel_configs:
                 - source_labels: [__name__]
-                  regex: 'kubelet_running_(pods|containers)|kubelet_runtime_operations_total|kubelet_runtime_operations_errors_total|kubelet_run_podsandbox_errors_total|kubelet_image_pull_duration_seconds_(bucket|sum|count)'
+                  regex: "kubelet_node_name|\
+                    kubelet_running_(pods|containers)|\
+                    kubelet_runtime_operations_(total|errors_total)|\
+                    kubelet_run_podsandbox_errors_total|\
+                    kubelet_pleg_last_seen_seconds|\
+                    kubelet_volume_stats_(available_bytes|capacity_bytes|used_bytes|inodes|inodes_free|inodes_used)|\
+                    kubelet_(pod_start_sli|pleg_relist)_duration_seconds_(bucket|sum|count)"
                   action: keep
 
             - job_name: cadvisor
@@ -144,7 +174,13 @@ data:
                   replacement: '${env:KUBE_NODE_NAME}'
               metric_relabel_configs:
                 - source_labels: [__name__]
-                  regex: 'container_cpu_usage_seconds_total|container_memory_working_set_bytes|container_memory_usage_bytes|container_cpu_cfs_periods_total|container_cpu_cfs_throttled_periods_total|container_cpu_cfs_throttled_seconds_total'
+                  regex: "kubelet_node_name|\
+                    kubelet_running_(pods|containers)|\
+                    kubelet_runtime_operations_(total|errors_total)|\
+                    kubelet_run_podsandbox_errors_total|\
+                    kubelet_pleg_last_seen_seconds|\
+                    kubelet_volume_stats_(available_bytes|capacity_bytes|used_bytes|inodes|inodes_free|inodes_used)|\
+                    kubelet_(pod_start_sli|pleg_relist)_duration_seconds_(bucket|sum|count)"
                   action: keep
 
       prometheus/kube-state-metrics:
@@ -181,6 +217,24 @@ data:
                   replacement: kube-state-metrics
                 - target_label: collector_node
                   replacement: '${env:KUBE_NODE_NAME}'
+              metric_relabel_configs:
+                - source_labels: [__name__]
+                  regex: "kube_pod_(info|owner|deletion_timestamp)|\
+                    kube_pod_status_(phase|ready|scheduled|reason|unschedulable)|\
+                    kube_pod_(init_)?container_status_(ready|restarts_total|waiting_reason|terminated_reason|last_terminated_reason)|\
+                    kube_pod_(init_)?container_resource_(requests|limits)|\
+                    kube_pod_spec_volumes_persistentvolumeclaims_info|\
+                    kube_deployment_(spec_replicas|metadata_generation)|\
+                    kube_deployment_status_(replicas|replicas_ready|replicas_available|replicas_unavailable|replicas_updated|observed_generation|condition)|\
+                    kube_daemonset_metadata_generation|\
+                    kube_daemonset_status_(current_number_scheduled|desired_number_scheduled|number_available|number_misscheduled|number_ready|number_unavailable|observed_generation|updated_number_scheduled)|\
+                    kube_statefulset_(replicas|metadata_generation)|\
+                    kube_statefulset_status_(replicas|replicas_current|replicas_ready|replicas_available|replicas_updated|observed_generation|current_revision|update_revision)|\
+                    kube_node_(info|spec_unschedulable)|\
+                    kube_node_status_(condition|capacity|allocatable)|\
+                    kube_persistentvolumeclaim_(info|status_phase|status_condition|resource_requests_storage_bytes|deletion_timestamp)|\
+                    kube_persistentvolume_(info|status_phase|capacity_bytes|deletion_timestamp)"
+                  action: keep
 
       filelog:
         include: [/var/log/pods/*/*/*.log]
