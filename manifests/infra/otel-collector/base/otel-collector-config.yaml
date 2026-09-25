@@ -133,7 +133,13 @@ data:
                   replacement: '${env:KUBE_NODE_NAME}'
               metric_relabel_configs:
                 - source_labels: [__name__]
-                  regex: 'kubelet_running_(pods|containers)|kubelet_runtime_operations_total|kubelet_runtime_operations_errors_total|kubelet_run_podsandbox_errors_total|kubelet_image_pull_duration_seconds_(bucket|sum|count)'
+                  regex: "kubelet_node_name|\
+                    kubelet_running_(pods|containers)|\
+                    kubelet_runtime_operations_(total|errors_total)|\
+                    kubelet_run_podsandbox_errors_total|\
+                    kubelet_pleg_last_seen_seconds|\
+                    kubelet_volume_stats_(available_bytes|capacity_bytes|used_bytes|inodes|inodes_free|inodes_used)|\
+                    kubelet_(pod_start_sli|pleg_relist)_duration_seconds_(bucket|sum|count)"
                   action: keep
 
             - job_name: cadvisor
@@ -168,7 +174,13 @@ data:
                   replacement: '${env:KUBE_NODE_NAME}'
               metric_relabel_configs:
                 - source_labels: [__name__]
-                  regex: 'container_cpu_usage_seconds_total|container_memory_working_set_bytes|container_memory_usage_bytes|container_cpu_cfs_periods_total|container_cpu_cfs_throttled_periods_total|container_cpu_cfs_throttled_seconds_total'
+                  regex: "kubelet_node_name|\
+                    kubelet_running_(pods|containers)|\
+                    kubelet_runtime_operations_(total|errors_total)|\
+                    kubelet_run_podsandbox_errors_total|\
+                    kubelet_pleg_last_seen_seconds|\
+                    kubelet_volume_stats_(available_bytes|capacity_bytes|used_bytes|inodes|inodes_free|inodes_used)|\
+                    kubelet_(pod_start_sli|pleg_relist)_duration_seconds_(bucket|sum|count)"
                   action: keep
 
       prometheus/kube-state-metrics:
