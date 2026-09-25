@@ -14,7 +14,7 @@ spec:
       labels:
         app: otel-collector
       annotations:
-        observability/config-revision: "metrics-optimization-v2"
+        observability/config-revision: "metrics-optimization-v3"
     spec:
       priorityClassName: "infra-critical"
       serviceAccountName: otel-collector-sa
