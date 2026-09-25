@@ -274,6 +274,13 @@ data:
           - sources:
             - from: connection
 
+      resource/node-exporter:
+        attributes:
+          - key: k8s.pod.name
+            action: delete
+          - key: k8s.pod.uid
+            action: delete
+
       resource/ksm:
         attributes:
           - key: k8s.pod.name
@@ -317,7 +324,7 @@ data:
           exporters: [otlphttp/grafana]
         metrics/node-exporter:
           receivers: [prometheus/node-exporter]
-          processors: [memory_limiter, batch]
+          processors: [memory_limiter, resource/node-exporter, batch]
           exporters: [otlphttp/grafana]
         metrics/kubelet:
           receivers: [prometheus/kubelet]
