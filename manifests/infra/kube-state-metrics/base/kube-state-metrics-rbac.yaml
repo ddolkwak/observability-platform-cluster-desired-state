@@ -15,7 +15,7 @@ metadata:
   name: kube-state-metrics
 rules:
   - apiGroups: [""]
-    resources: ["pods"]
+    resources: ["pods", "nodes", "persistentvolumeclaims", "persistentvolumes"]
     verbs: ["get", "list", "watch"]
   - apiGroups: ["apps"]
     resources: ["deployments", "daemonsets", "statefulsets"]
