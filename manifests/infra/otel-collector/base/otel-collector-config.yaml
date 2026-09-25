@@ -205,6 +205,24 @@ data:
                   replacement: kube-state-metrics
                 - target_label: collector_node
                   replacement: '${env:KUBE_NODE_NAME}'
+              metric_relabel_configs:
+                - source_labels: [__name__]
+                  regex: "kube_pod_(info|owner|deletion_timestamp)|\
+                    kube_pod_status_(phase|ready|scheduled|reason|unschedulable)|\
+                    kube_pod_(init_)?container_status_(ready|restarts_total|waiting_reason|terminated_reason|last_terminated_reason)|\
+                    kube_pod_(init_)?container_resource_(requests|limits)|\
+                    kube_pod_spec_volumes_persistentvolumeclaims_info|\
+                    kube_deployment_(spec_replicas|metadata_generation)|\
+                    kube_deployment_status_(replicas|replicas_ready|replicas_available|replicas_unavailable|replicas_updated|observed_generation|condition)|\
+                    kube_daemonset_metadata_generation|\
+                    kube_daemonset_status_(current_number_scheduled|desired_number_scheduled|number_available|number_misscheduled|number_ready|number_unavailable|observed_generation|updated_number_scheduled)|\
+                    kube_statefulset_(replicas|metadata_generation)|\
+                    kube_statefulset_status_(replicas|replicas_current|replicas_ready|replicas_available|replicas_updated|observed_generation|current_revision|update_revision)|\
+                    kube_node_(info|spec_unschedulable)|\
+                    kube_node_status_(condition|capacity|allocatable)|\
+                    kube_persistentvolumeclaim_(info|status_phase|status_condition|resource_requests_storage_bytes|deletion_timestamp)|\
+                    kube_persistentvolume_(info|status_phase|capacity_bytes|deletion_timestamp)"
+                  action: keep
 
       filelog:
         include: [/var/log/pods/*/*/*.log]
