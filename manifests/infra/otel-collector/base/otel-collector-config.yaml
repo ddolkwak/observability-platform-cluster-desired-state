@@ -321,10 +321,37 @@ data:
         error_mode: ignore
         log_statements:
           - context: log
+            conditions:
+              - 'resource.attributes["k8s.namespace.name"] == "spring-app" and resource.attributes["k8s.container.name"] == "spring-app" and IsString(log.body)'
             statements:
-              - set(cache, ExtractPatterns(body, "traceId=(?P<t>[a-f0-9]+),spanId=(?P<s>[a-f0-9]+)"))
-              - set(trace_id.string, cache["t"])
-              - set(span_id.string, cache["s"])
+              - 'set(log.cache["json"], ParseJSON(log.body)) where IsMatch(log.body, "^\\s*\\{")'
+              - 'set(log.attributes["operation"], log.cache["json"]["operation"])'
+              - 'set(log.attributes["result"], log.cache["json"]["result"])'
+              - 'set(log.attributes["testRunId"], log.cache["json"]["testRunId"])'
+              - 'set(log.attributes["recordId"], log.cache["json"]["recordId"])'
+              - 'set(log.attributes["returnedRows"], Int(log.cache["json"]["returnedRows"])) where log.cache["json"]["returnedRows"] != nil'
+              - 'set(log.attributes["deletedCount"], Int(log.cache["json"]["deletedCount"])) where log.cache["json"]["deletedCount"] != nil'
+              - 'set(log.attributes["exceptionType"], log.cache["json"]["exceptionType"])'
+              - 'set(log.attributes["exceptionCauseTypes"], log.cache["json"]["exceptionCauseTypes"])'
+              - 'set(log.attributes["exceptionStackFrames"], log.cache["json"]["exceptionStackFrames"])'
+              - 'set(log.severity_text, log.cache["json"]["level"]) where IsString(log.cache["json"]["level"])'
+              - 'set(log.severity_number, SEVERITY_NUMBER_TRACE) where log.cache["json"]["level"] == "TRACE"'
+              - 'set(log.severity_number, SEVERITY_NUMBER_DEBUG) where log.cache["json"]["level"] == "DEBUG"'
+              - 'set(log.severity_number, SEVERITY_NUMBER_INFO) where log.cache["json"]["level"] == "INFO"'
+              - 'set(log.severity_number, SEVERITY_NUMBER_WARN) where log.cache["json"]["level"] == "WARN"'
+              - 'set(log.severity_number, SEVERITY_NUMBER_ERROR) where log.cache["json"]["level"] == "ERROR"'
+              - 'set(log.time, Time(log.cache["json"]["@timestamp"], "%Y-%m-%dT%H:%M:%S%z")) where IsString(log.cache["json"]["@timestamp"])'
+              - 'set(log.cache["valid_json_ids"], true) where IsString(log.cache["json"]["traceId"]) and IsString(log.cache["json"]["spanId"]) and IsMatch(log.cache["json"]["traceId"], "^[a-f0-9]{32}$") and IsMatch(log.cache["json"]["spanId"], "^[a-f0-9]{16}$") and log.cache["json"]["traceId"] != "00000000000000000000000000000000" and log.cache["json"]["spanId"] != "0000000000000000"'
+              - 'set(log.trace_id.string, log.cache["json"]["traceId"]) where log.cache["valid_json_ids"] == true'
+              - 'set(log.span_id.string, log.cache["json"]["spanId"]) where log.cache["valid_json_ids"] == true'
+          - context: log
+            conditions:
+              - 'IsString(log.body) and not IsMatch(log.body, "^\\s*\\{")'
+            statements:
+              - 'set(log.cache["legacy"], ExtractPatterns(log.body, "\\[traceId=(?P<t>[a-f0-9]{32}),spanId=(?P<s>[a-f0-9]{16})\\]"))'
+              - 'set(log.cache["valid_legacy_ids"], true) where log.cache["legacy"]["t"] != nil and log.cache["legacy"]["s"] != nil and log.cache["legacy"]["t"] != "00000000000000000000000000000000" and log.cache["legacy"]["s"] != "0000000000000000"'
+              - 'set(log.trace_id.string, log.cache["legacy"]["t"]) where log.cache["valid_legacy_ids"] == true'
+              - 'set(log.span_id.string, log.cache["legacy"]["s"]) where log.cache["valid_legacy_ids"] == true'
       
       batch:
         timeout: 10s
